@@ -1,4 +1,5 @@
 import React,{useState} from 'react';
+import {CSSTransition} from 'react-transition-group';
 
 const App = () => {
 
@@ -7,9 +8,7 @@ const App = () => {
     <div className="App">
      <NavBar>
        <NavItem icon = "😀" >
-         <Dropdown>
-            HI
-         </Dropdown>
+         <Dropdown />
         </NavItem>
      </NavBar> 
     </div>
@@ -47,30 +46,62 @@ const NavItem = (props: any) => {
   );
 }
 
+
+
 const Dropdown = (props: any) => {
- 
+    
+
+    
+  const DropdownItem = (props: any) => {
+
+    return (
+      <a  className = "menu-item" onClick={ () => props.goToMenu && setActiveMenu(props.goToMenu)}> 
+    
+        {
+          props.leftIcon &&
+        <span className = "icon-button">{props.leftIcon}</span>
+
+        }
+
+        {props.children} 
+
+        {
+          props.rightIcon &&
+        <span className = "icon-button">{props.rightIcon}</span>
+      }
+      </a>
+    )
+  }
+
+
+  let [activeMenu,setActiveMenu] = useState('main');
   return (
   <div className="dropdown">
-    <DropdownItem leftIcon = '' rightIcon = ''  >My Profile</DropdownItem>
-    <DropdownItem  ></DropdownItem>
-    <DropdownItem rightIcon = '👶' ></DropdownItem>
+    <CSSTransition in = {activeMenu === 'main'} unmountOnExit timeout = {500} classNames="menu-primary">
+      <div className="menu">
+
+        <DropdownItem goToMenu="my-profile" >My Profile</DropdownItem>
+        <DropdownItem rightIcon = '🍱' goToMenu="food-items" ></DropdownItem>
+    
+
+      </div>
+
+    </CSSTransition>
+
+    <CSSTransition in = {activeMenu === 'food-items'} unmountOnExit timeout = {500} classNames="menu-secondary">
+      <div className="menu">
+        
+        <DropdownItem goToMenu="main">`${'🍕'}` Pizzas are bae</DropdownItem>
+        <DropdownItem goToMenu="main">`${'🥓➕🍳'}` Perfect....!</DropdownItem>
+
+
+      </div>
+
+    </CSSTransition>
   </div>
   )
 }
 
-const DropdownItem = (props: any) => {
 
-  return (
-    <a href="#" className = "menu-item"> 
-
-      <span className = "icon-button">{props.leftIcon}</span>
-
-      {props.children} 
-
-      <span className = "icon-button">{props.rightIcon}</span>
-
-    </a>
-  )
-}
 
 export default App;
